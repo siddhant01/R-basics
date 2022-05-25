@@ -1,0 +1,246 @@
+```{R}
+rainfall <- c(799,1174.8,865.1,1334.6,635.4,918.5,685.5,998.6,784.2,985,882.8,1071)
+
+rainfall.timeseries <- ts(rainfall,start = c(2012,1),frequency = 12)
+print(rainfall.timeseries)
+
+plot(rainfall.timeseries)
+```
+
+
+
+```{R}
+x <- c(12,7,3,4.2,18,2,54,-21,8,-5)
+
+x_mean = mean(x)
+x_mean = mean(x,trim = 0.3) #trim 3 values from both end after sorting
+
+x <- c(12,7,3,4.2,12,2,54,-21,8,-5,NA)
+
+x_mean = mean(x)
+x_mena = mean(x, na.rm = TRUE)
+x_median = median(x, na.rm = TRUE)
+x_mode = mode(x)
+
+
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+print(getmode(x))
+```
+
+
+```{R}
+# linear regression
+# y = ax + b
+
+x <- c(151, 174, 138, 186, 128, 136, 179, 163, 152, 131)
+y <- c(63, 81, 56, 91, 47, 57, 76, 72, 62, 48)
+
+# Apply the lm() function.
+relation <- lm(y~x)
+
+print(relation)
+print(summary(relation))
+a <- data.frame(x = 170)
+result <-  predict(relation,a)
+print(result)
+```
+
+```{R}
+# Multiple Regression
+# y = a + b1x1 + b2x2 +...bnxn
+
+input <- mtcars[,c("mpg","disp","hp","wt")]
+
+# Create the relationship model.
+model <- lm(mpg~disp+hp+wt, data = input)
+
+# Show the model.
+print(model)
+
+# Get the Intercept and coefficients as vector elements.
+cat("# # # # The Coefficient Values # # # ","\n")
+
+a <- coef(model)[1]
+print(a)
+
+Xdisp <- coef(model)[2]
+Xhp <- coef(model)[3]
+Xwt <- coef(model)[4]
+
+print(Xdisp)
+print(Xhp)
+print(Xwt)
+```
+
+```{R}
+# Logistic Regression
+# y = 1/(1+e^-(a+b1x1+b2x2+b3x3+...))
+
+input <- mtcars[,c("am","cyl","hp","wt")]
+
+am_data = glm(formula = am ~ cyl + hp + wt, data = input, family = binomial)
+
+print(summary(am_data))
+```
+
+```{R}
+# Least Square regression, we establish a regression model in which the sum of the squares of the vertical distances of different points from the regression curve is minimized.
+
+xvalues <- c(1.6,2.1,2,2.23,3.71,3.25,3.4,3.86,1.19,2.21)
+yvalues <- c(5.19,7.43,6.94,8.11,18.75,14.88,16.06,19.12,3.21,7.58)
+
+model <- nls(yvalues ~ b1*xvalues^2+b2,start = list(b1 = 1,b2 = 3))
+
+```
+
+
+```{R}
+# Poisson Regression
+# log(y) = a + b1x1 + b2x2 + bnxn.....
+
+input <- warpbreaks
+output <-glm(formula = breaks ~ wool+tension, data = warpbreaks,
+   family = poisson)
+print(summary(output))
+
+```
+
+
+```{R}
+# Normal Distribution
+# f(x) = (1/√(2πσ2)) * e^([-(x-μ)^2]/2σ^2)
+
+x <- seq(-10, 10, by = .1)
+y <- dnorm(x, mean = 2.5, sd = 2) #normal curve
+plot(x,y, main='dnorm')
+
+y <- pnorm(x, mean = 2.5, sd = 2) #cumulative distributive function
+plot(x,y, main='pnorm')
+
+
+y <- qnorm(x, mean = 2.5, sd = 2)
+plot(x,y, main='qnorm') #takes the probability value and gives a number whose cumulative value matches the probability value.
+
+y <- rnorm(50) #generate random numbers whose distribution is normal.
+```
+
+```{R}
+# Binomial distribution
+# b = (nCx) * (P^x) * ((1 – P)^(n – x))
+
+x <- seq(0,50,by = 1)
+
+
+y <- dbinom(x,size = 50,prob = 0.5)
+plot(x,y, 'dbinom')
+
+y <- pbinom(x,size = 50,prob = 0.5)
+plot(x,y, 'dbinom')
+
+y <- qbinom(x,size = 50,prob = 0.5)
+plot(x,y, 'dbinom')
+
+y <- rbinom(8 ,size = 50,prob = 0.5)
+```
+
+```{R}
+# A t-test is used to determine if there is a significant difference between the means of two groups, which may be related in certain features
+
+# one sample t test
+sweetSold <- c(rnorm(50, mean = 140, sd = 5))
+t.test(sweetSold, mu = 150) # Ho: mu = 150
+
+# two sample t test 
+shopOne <- rnorm(50, mean = 140, sd = 4.5)
+shopTwo <- rnorm(50, mean = 150, sd = 4)
+ 
+t.test(shopOne, shopTwo, var.equal = TRUE)
+
+# paired sample t test
+
+sweetOne <- c(rnorm(100, mean = 14, sd = 0.3))
+sweetTwo <- c(rnorm(100, mean = 13, sd = 0.2))
+ 
+t.test(sweetOne, sweetTwo, paired = TRUE)
+
+```
+
+
+```{R}
+# A z-test is a statistical test used to determine whether two population means are different when the variances are known and the sample size is large.
+
+library(BSDA)
+
+data = c(88, 92, 94, 94, 96, 97, 97, 97, 99, 99,
+         105, 109, 109, 109, 110, 112, 112, 113, 114, 115)
+
+z.test(data, mu=100, sigma.x=15)
+
+
+cityA = c(82, 84, 85, 89, 91, 91, 92, 94, 99, 99,
+         105, 109, 109, 109, 110, 112, 112, 113, 114, 114)
+
+cityB = c(90, 91, 91, 91, 95, 95, 99, 99, 108, 109,
+         109, 114, 115, 116, 117, 117, 128, 129, 130, 133)
+
+z.test(x=cityA, y=cityB, mu=0, sigma.x=15, sigma.y=15)
+```
+
+```{R}
+# Chi-Square test is a statistical method to determine if two categorical variables have a significant correlation between them
+
+library("MASS")
+
+# Create a table with the needed variables.
+car.data = table(Cars93$AirBags, Cars93$Type) 
+print(car.data)
+
+# Perform the Chi-Square test.
+print(chisq.test(car.data))
+```
+
+```{R}
+# AnCova / anova
+# effect of the categorical variable by using it along with the predictor variable and comparing the regression lines for each level of the categorical variable. Such an analysis is termed as Analysis of Covariance
+
+
+input <- mtcars
+
+
+result1 <- aov(mpg~hp*am,data = input)
+result2 <- aov(mpg~hp+am,data = input)
+
+print(summary(result1))
+print(summary(result2))
+
+print(anova(result1,result2))
+```
+
+
+```{R}
+# Decision Tree
+
+library(party)
+
+input.dat <- readingSkills[c(1:105),]
+
+tree <- ctree(nativeSpeaker ~ age + shoeSize + score, data = input.dat)
+
+plot(tree)
+```
+
+
+```{R}
+# Random Forest
+
+library(party)
+library(randomForest)
+
+output.forest <- randomForest(nativeSpeaker ~ age + shoeSize + score, 
+           data = readingSkills)
+
+print(output.forest) 
+```

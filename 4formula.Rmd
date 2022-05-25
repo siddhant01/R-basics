@@ -1,0 +1,35 @@
+```{R}
+# note one formula differs from function to function where it is used
+# note + does not mean add only it differs from function to function
+
+f0 = y ~ x + 1
+f1 = quote(x+1)
+f11 = as.formula("y ~ x + 1")
+f12 = lapply(y <- x+1, as.formula)
+
+typeof(f0)
+class(f0)
+
+typeof(f1)
+class(f1)
+
+typeof(f11)
+class(f11)
+
+typeof(f12)
+class(f12)
+
+terms(f1)
+
+
+f2 = ~ x
+
+length(f0)
+length(f1)
+length(f2)
+
+
+
+# https://towardsdatascience.com/r-formula-tutorial-for-beginners-1a6d88e2d0bb
+
+```
